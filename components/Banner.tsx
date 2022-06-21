@@ -16,7 +16,7 @@ useEffect(() => {
   setMovie( netflixOriginals[Math.floor(Math.random() * netflixOriginals.length)] )
 }, [netflixOriginals])
 
-console.log('random movie', movie)
+// console.log('random movie', movie)
 
   return (
     // <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
