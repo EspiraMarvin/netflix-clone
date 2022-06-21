@@ -5,7 +5,7 @@
 /* html, body, heading */
 @layer base {
     html {
-        @apply !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600;
+        /* @apply !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600; */
     }
     body {
         @apply bg-[#141414] text-white 
@@ -26,6 +26,6 @@
         hover:opacity-75 md:py-2.5 md:px-8 md:text-xl;
     }
     .chevronDirectionIcon {
-        @apply top-0 bottom-0 z-40 m-auto transition opacity-0 cursor-pointer left-2 h-9 w-9 hover:scale-125 group-hover:opacity-100;
+        @apply absolute top-0 bottom-0 z-40 m-auto transition opacity-0 cursor-pointer right-2 h-9 w-9 hover:scale-125 group-hover:opacity-100;
     }
 }
