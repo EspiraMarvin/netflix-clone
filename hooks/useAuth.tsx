@@ -39,13 +39,17 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     const [initialLoading, setInitialLoading] = useState(true) // displays before the user authenticates
     const router = useRouter()
 
-    // persisting the loggedin user if authenticated
-    useEffect(() => {
+    // persisting the loggedin user if authenticated and if there's no user redirect back to login page
+    useEffect(
+        () => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // Logged in ...
+                // if(router.pathname === '/login') router.push('/')
                 setUser(user)
                 setLoading(false)
+                // console.log('user', user)
+                // console.log('router', router)
             } else {
                 // Not Logged in ...
                 setUser(null)   
@@ -57,6 +61,29 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
         })
     }, [auth])
 
+/*
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // Logged in...
+          setUser(user)
+          setLoading(false)
+        } else {
+          // Not logged in...
+          setUser(null)
+          setLoading(true)
+          router.push('/login')
+        }
+
+        setInitialLoading(false)
+      }),
+    [auth]
+  )
+  */
+
+
+    
     // sign up fn
     const signUp = async (email: string, password: string) => {
         setLoading(true)

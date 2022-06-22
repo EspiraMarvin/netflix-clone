@@ -6,6 +6,7 @@ import Banner from '../components/Banner'
 import requests from '../utils/requests'
 import Row from '../components/Row'
 import { Movie } from '../typings'
+import useAuth from '../hooks/useAuth'
 
 interface Props {
   netflixOriginals: Movie[]
@@ -28,6 +29,15 @@ const Home = ({
   romanceMovies,
   documentaries
 }: Props) => {
+   
+  const { loading } = useAuth()
+  
+  if (loading) return (
+    "loading"
+  )
+  
+  // if (loading) return null
+
   return (
     <div className="relative h-screen lg:h-[140vh]">
       <Head>
