@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { signInWithPopup } from 'firebase/auth'
 
 interface Inputs {
   email: string
