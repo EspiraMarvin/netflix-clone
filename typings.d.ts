@@ -21,13 +21,14 @@ export interface Genre {
     popularity: number
     poster_path: string
     vote_average: number
-    vote_count: number
+    vote_count: number,
+    adult: boolean
   }
   
   // element interface has a type of either Bloopers, Featurette, Behind the Scenes, Clip, Trailer, Teaser
   export interface Element {
     type:
-      | 'Bloopers'
+       'Bloopers'
       | 'Featurette'
       | 'Behind the Scenes'
       | 'Clip'
