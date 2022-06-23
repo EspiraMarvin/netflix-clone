@@ -11,7 +11,7 @@ interface Inputs {
 
 function login() {
   const [login, setLogin ] = useState(false)
-  const {signIn, signUp } = useAuth()
+  const {signIn, signUp, loadingSignIn, loadingSignUp } = useAuth()
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
 
@@ -77,13 +77,13 @@ function login() {
         </div>
 
         <button className='w-full py-3 rounded bg-[#e50914] font-semibold' onClick={() => setLogin(true)}>
-          Sign In
+          { !loadingSignIn ?  <span> Sign In</span> : 'Loading..'}
         </button>
 
         <div className='text-[gray]'>
           New to Netflix?{' '}
           <button type="submit" className='text-white hover:underline' onClick={() => setLogin(false)}>
-            Sign up now
+          { !loadingSignUp ?  <span> Sign up now</span> : 'Loading..'}
           </button>
         </div>
       </form>
