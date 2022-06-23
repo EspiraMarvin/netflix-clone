@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import useAuth from '../hooks/useAuth'
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Inputs {
   email: string
@@ -76,14 +77,21 @@ function login() {
           </label>
         </div>
 
-        <button className='w-full py-3 rounded bg-[#e50914] font-semibold' onClick={() => setLogin(true)}>
-          { !loadingSignIn ?  <span> Sign In</span> : 'Loading..'}
+        <button className="w-full py-3 rounded bg-[#e50914] font-semibold" onClick={() => setLogin(true)}>
+          { !loadingSignIn ?
+            <span> Sign In</span>
+            : 
+            <CircularProgress size={30} thickness={4} className="text-white" style={{color: "white"}} /> }
         </button>
 
         <div className='text-[gray]'>
-          New to Netflix?{' '}
+          New to Netflix?  {' '}
           <button type="submit" className='text-white hover:underline' onClick={() => setLogin(false)}>
-          { !loadingSignUp ?  <span> Sign up now</span> : 'Loading..'}
+          { !loadingSignUp ? 
+            <span> Sign up now</span>
+             :
+             ( <span>Loading...</span> )
+          }
           </button>
         </div>
       </form>

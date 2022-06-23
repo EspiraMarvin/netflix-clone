@@ -28,7 +28,7 @@ const AuthContext = createContext<IAuth>({
     logOut: async () => {},
     error: null,
     loading: false,
-    loadingSignIn: false,
+    loadingSignIn: true,
     loadingSignUp: false
 }) 
 
@@ -78,23 +78,29 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 setLoadingSignUp(false)
             })
             .catch(error => alert(error.message))
-            .finally(() => setLoadingSignUp(false))
+            .finally(() => {
+                setLoadingSignUp(false)
+                setLoading(false)
+            })
     }
 
     // sign in fn
     const signIn = async (email: string, password: string) => {
         setLoadingSignIn(true)
-        // setLoading(true)
+        setLoading(true)
 
         await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 setUser(userCredential.user)
                 router.push('/')
-                // setLoading(false)
+                setLoading(false)
                 setLoadingSignIn(false)
             })
             .catch(error => alert(error.message))
-            .finally(() => setLoadingSignIn(false))
+            .finally(() => {
+            setLoadingSignIn(false)
+            setLoading(false)
+            })
     }
 
     // logout fn
