@@ -17,6 +17,8 @@ interface IAuth { //inteface auth(IAuth)
     logOut: () => Promise<void>
     error: string | null
     loading: boolean
+    loadingSignIn: boolean
+    loadingSignUp: boolean
 }
 
 const AuthContext = createContext<IAuth>({ 
@@ -25,7 +27,9 @@ const AuthContext = createContext<IAuth>({
     signIn: async () => {},
     logOut: async () => {},
     error: null,
-    loading: false
+    loading: false,
+    loadingSignIn: false,
+    loadingSignUp: false
 }) 
 
 interface AuthProviderProps {
@@ -34,6 +38,8 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({children}: AuthProviderProps) => {
     const [loading, setLoading] = useState(false)
+    const [loadingSignIn, setLoadingSignIn] = useState(false)
+    const [loadingSignUp, setLoadingSignUp] = useState(false)
     const [user, setUser] = useState<User | null>(null)
     const [error , setError] = useState(null)
     const [initialLoading, setInitialLoading] = useState(true) // displays before the user authenticates
@@ -45,11 +51,8 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // Logged in ...
-                // if(router.pathname === '/login') router.push('/')
                 setUser(user)
                 setLoading(false)
-                // console.log('user', user)
-                // console.log('router', router)
             } else {
                 // Not Logged in ...
                 setUser(null)   
@@ -59,57 +62,39 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
 
             setInitialLoading(false)
         })
-    }, [auth])
-
-/*
-  useEffect(
-    () =>
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // Logged in...
-          setUser(user)
-          setLoading(false)
-        } else {
-          // Not logged in...
-          setUser(null)
-          setLoading(true)
-          router.push('/login')
-        }
-
-        setInitialLoading(false)
-      }),
-    [auth]
-  )
-  */
-
+    }, [])
 
     
     // sign up fn
     const signUp = async (email: string, password: string) => {
-        setLoading(true)
+        setLoadingSignUp(true)
+        // setLoading(true)
         
         await createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 setUser(userCredential.user)
                 router.push('/')
-                setLoading(false)
+                // setLoading(false)
+                setLoadingSignUp(false)
             })
             .catch(error => alert(error.message))
-            .finally(() => setLoading(false))
+            .finally(() => setLoadingSignUp(false))
     }
 
     // sign in fn
     const signIn = async (email: string, password: string) => {
-        setLoading(true)
+        setLoadingSignIn(true)
+        // setLoading(true)
 
         await signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 setUser(userCredential.user)
                 router.push('/')
-                setLoading(false)
+                // setLoading(false)
+                setLoadingSignIn(false)
             })
             .catch(error => alert(error.message))
-            .finally(() => setLoading(false))
+            .finally(() => setLoadingSignIn(false))
     }
 
     // logout fn
@@ -126,8 +111,8 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
 
 
     const memoedValue = useMemo(
-        () => ({ user, signUp, signIn, loading, logOut, error}),
-        [user, loading]
+        () => ({ user, signUp, signIn, loading, loadingSignIn , loadingSignUp, logOut, error}),
+        [user, loading, loadingSignIn, loadingSignUp]
     )
 
   return (
