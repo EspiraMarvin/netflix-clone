@@ -1,5 +1,6 @@
 module.exports = {
-    singleQuote: true,
+    singleQuote: false,
+    doubleQuote: true,
     semi: false,
   }
   
