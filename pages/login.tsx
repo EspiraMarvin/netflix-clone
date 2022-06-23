@@ -81,7 +81,7 @@ function login() {
           { !loadingSignIn ?
             <span> Sign In</span>
             : 
-            <CircularProgress size={30} thickness={4} className="text-white" style={{color: "white"}} /> }
+            <CircularProgress size={25} thickness={4} className="text-white" style={{color: "white"}} /> }
         </button>
 
         <div className='text-[gray]'>

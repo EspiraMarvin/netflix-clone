@@ -12,6 +12,7 @@ interface trailerDetailsType {
   runtime: number | null
 } 
 
+
 function Modal() {
     const isMounted = useRef(false)
     const [showModal, setShowModal] = useRecoilState(modalState)
@@ -19,6 +20,7 @@ function Modal() {
     const [trailer, setTrailer] = useState('')
     const [trailerDetails, setTrailerDetails] = useState<trailerDetailsType | null>(null)
     const [genres, setGenres] = useState<Genre[]>([])
+    const [play, setPlay] = useState(true)
     const [muted, setMuted] = useState(false)
     const [showMore, setShowMore] = useState(true)
 
@@ -46,8 +48,6 @@ function Modal() {
                 setTrailer(data.videos?.results[index]?.key)
                 setTrailerDetails(data)
             }
-            
-              
 
             if(data?.genres) {
               setGenres(data.genres)
@@ -56,8 +56,7 @@ function Modal() {
         // console.log('trailer details runtime', trailerDetails?.runtime)
 
         fetchMovie()
-  
-    
+
     }, [movie])
 
 
@@ -71,10 +70,7 @@ function Modal() {
     const movieLength = (minutes: number): React.ReactNode => {
         let hours = Math.floor(minutes/60)
         let mins = minutes % 60
-        console.log('getMovieLength RUN', hours + 'hours' + mins + 'minutes')
-        return ( movieRuntime !== undefined && 
-          <div> {hours}hr {mins}mins </div>          
-         )
+        return movieRuntime !== undefined && <div> {hours}hr {mins}mins </div>       
     }
 
 
@@ -95,17 +91,20 @@ function Modal() {
 
          <div className="relative pt-[56.25%]">
           <ReactPlayer
+              playing={play}
               url={`https://www.youtube.com/watch?v=${trailer}`}
               width="100%"
               height="100%"
               style={{ position: 'absolute', top: '0', left: '0' }}
-              playing
+              
               muted={muted}
             />
 
          <div className="absolute flex items-center justify-between w-full px-10 bottom-10">
            <div className="flex space-x-2">
-              <button className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]">
+              <button
+                 onClick={() => setPlay(!play)}
+                 className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]">
                 <FaPlay className="mt-1 text-black h-7 w-7" />
                 Play
               </button>
@@ -144,7 +143,7 @@ function Modal() {
                   } 
                 </p>
                 <p className='hidden font-light md:inline'>
-                  { trailer !== undefined && movieLength(minutes) }
+                  { movieLength(minutes) }
                 </p>
                 <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-xs">
                 HD 
@@ -163,7 +162,7 @@ function Modal() {
                      { showMore ? (<span>Show more</span>) : (<span>Show less</span>) }
                    </button>
                  </p>
-                 <div className='flex flex-col space-y-2 text-sm'>
+                 <div className='flex flex-col space-y-3 text-sm'>
                    <div>
                     <span className="text-[gray]">Genres: </span>
                     {genres.map(genre => genre.name).join(',')}
