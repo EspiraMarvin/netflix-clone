@@ -6,6 +6,7 @@ import { Element, Genre } from '../typings'
 import ReactPlayer from 'react-player/lazy'
 import { FaPlay } from 'react-icons/fa'
 import { XIcon, PlusIcon, CheckIcon, ThumbUpIcon, VolumeOffIcon, VolumeUpIcon } from '@heroicons/react/outline'
+import { format } from 'date-fns'
 
 interface trailerDetailsType {
   runtime: number | null
@@ -19,6 +20,7 @@ function Modal() {
     const [trailerDetails, setTrailerDetails] = useState<trailerDetailsType | null>(null)
     const [genres, setGenres] = useState<Genre[]>([])
     const [muted, setMuted] = useState(false)
+    const [showMore, setShowMore] = useState(true)
 
 
     useEffect(() => {
@@ -39,16 +41,9 @@ function Modal() {
             ).then(response => response.json())
             .catch(err => console.log('err at modal', err))
             
-            console.log('trailer data adult', data.adult)
-                
             if(data?.videos) {
                 const index = data.videos.results.findIndex((element: Element) => element.type === "Trailer")
                 setTrailer(data.videos?.results[index]?.key)
-                // setMovie(prevMovie => {
-                  // console.log('prevMovie', prevMovie)
-                  // movie
-                // } 
-                // )
                 setTrailerDetails(data)
             }
             
@@ -58,17 +53,12 @@ function Modal() {
               setGenres(data.genres)
             }
         }
-        console.log('trailer details', trailerDetails?.runtime)
-        console.log('TYPEOF trailer details',typeof trailerDetails?.runtime)
+        // console.log('trailer details runtime', trailerDetails?.runtime)
 
         fetchMovie()
   
     
     }, [movie])
-    // console.log('trailer', trailer)
-    // console.log('movie adult', movie)
-    console.log('trailer details', trailerDetails?.runtime)
-    // console.log('TYPEOF trailer details',typeof trailerDetails.runtime)
 
 
     const handleClose = () => {
@@ -78,17 +68,14 @@ function Modal() {
     const movieRuntime = trailerDetails?.runtime
     let minutes: any = null
     movieRuntime !== undefined ? minutes = trailerDetails?.runtime : undefined
-    const movieLength = (minutes: number): JSX.Element => {
+    const movieLength = (minutes: number): React.ReactNode => {
         let hours = Math.floor(minutes/60)
         let mins = minutes % 60
         console.log('getMovieLength RUN', hours + 'hours' + mins + 'minutes')
-        return (
-          <div> {hours}hr {mins}mins </div>
+        return ( movieRuntime !== undefined && 
+          <div> {hours}hr {mins}mins </div>          
          )
- 
     }
-
-    // getMovieLength(minutes)
 
 
   return (
@@ -144,19 +131,20 @@ function Modal() {
             <div className="space-y-6 text-lg">
                <div className="flex items-center space-x-2 text-sm">
                 <p className='font-semibold text-green-400'>{movie!.vote_average * 10}% Match</p>
-                <p className='font-light'>{movie?.release_date || movie?.first_air_date}</p>
-                <p className='hidden font-light md:inline'>
-                  { movieLength(minutes) }
-                  {/* R{trailerDetails?.runtime} */}
-                  </p>
+                <p className='font-light'>{ movie?.release_date || movie?.first_air_date }</p>
+                {/* <p className='font-light'>{ format(new Date(movie?.release_date), 'yyyy') || format(new Date(movie?.first_air_date), 'yyyy')}</p> */}
+                {/* <p className='font-light'>{ format(new Date(movie?.release_date) || new Date(movie?.first_air_date), 'yyyy')}</p> */}
                 <p className="text-white">
-                {movie?.adult ? (
+                  {movie?.adult ? (
                       <div className="flex items-center justify-center h-4 border rounded border-white/40 px-1.5 text-xs">18+</div>
                     ) : 
                     (
                       <div className="flex items-center justify-center h-4 border rounded border-white/40 px-1.5 text-xs">R</div>
                     )
                   } 
+                </p>
+                <p className='hidden font-light md:inline'>
+                  { trailer !== undefined && movieLength(minutes) }
                 </p>
                 <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-xs">
                 HD 
@@ -165,8 +153,17 @@ function Modal() {
 
                {/* movie overview/description */}
                <div className="flex flex-col font-light gap-x-10 gap-y-4 md:flex-row">
-                 <p className='w-5/6'>{movie?.overview}</p>
-                 <div className='flex flex-col space-y-3 text-sm'>
+                 <p className="w-full md:w-5/6">
+                  { showMore ? movie?.overview.slice(0, 160) : movie?.overview} {showMore && (<span> ... </span>)}
+                   <button 
+                     className={`${showMore && "showMoreLessButton"} 
+                      ${!showMore &&  "showMoreLessButton ml-2"} `}
+                     onClick={() => setShowMore(!showMore)}
+                    >
+                     { showMore ? (<span>Show more</span>) : (<span>Show less</span>) }
+                   </button>
+                 </p>
+                 <div className='flex flex-col space-y-2 text-sm'>
                    <div>
                     <span className="text-[gray]">Genres: </span>
                     {genres.map(genre => genre.name).join(',')}
@@ -181,13 +178,7 @@ function Modal() {
                     <span className="text-[gray]">Total Votes: </span>
                     {movie?.vote_count} 
                    </div>
-                  
-                          
-                   <div>
-                    <span className="text-[gray]">trailerDetails adult: </span>
-                    {movie?.adult} 
-                   </div>
-
+          
                    
                  </div>
                </div>
