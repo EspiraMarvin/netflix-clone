@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import MuiModal from "@mui/material/Modal"
+import CircularProgress from '@mui/material/CircularProgress';
 import { useRecoilState } from 'recoil'
 import { modalState, movieState } from '../atoms/modalAtoms'
 import { Element, Genre } from '../typings'
@@ -20,7 +21,8 @@ function Modal() {
     const [trailer, setTrailer] = useState('')
     const [trailerDetails, setTrailerDetails] = useState<trailerDetailsType | null>(null)
     const [genres, setGenres] = useState<Genre[]>([])
-    const [play, setPlay] = useState(true)
+    const [play, setPlay] = useState(false)
+    const [showPause, setShowPause] = useState(false)
     const [muted, setMuted] = useState(false)
     const [showMore, setShowMore] = useState(true)
 
@@ -103,35 +105,45 @@ function Modal() {
               width="100%"
               height="100%"
               style={{ position: 'absolute', top: '0', left: '0' }}
-              
               muted={muted}
+              onReady={(() => setPlay(true))}
+              onBuffer={(() => setShowPause(true))}
             />
 
          <div className="absolute flex items-center justify-between w-full px-10 bottom-10">
            <div className="flex space-x-2">
               <button
                  onClick={() => setPlay(!play)}
-                 className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]"
+                 className="flex items-center gap-x-2 rounded bg-white px-5 md:px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]"
                  >
                  { play ?
-                 (
-                  <>  
-                    <PauseIcon className="mt-1 text-black h-7 w-7" />
-                    Pause
-                  </>
-                 )
-                 :
-                 ( 
-                  <>
-                    <FaPlay className="mt-1 text-black h-7 w-7" /> 
-                    Play
-                  </>
-                 )
+                  (
+                    <>  
+                      <PauseIcon className="mt-1 text-black h-7 w-7" />
+                      Pause
+                    </>
+                  )
+                  :
+                  ( 
+                    <>
+                    {showPause ?
+                      (
+                        <>
+                          <FaPlay className="mt-1 text-black h-7 w-11" /> 
+                          Play
+                        </>
+                      )
+                      :
+                      (
+                      <div className='w-20'>
+                        <CircularProgress size={25} thickness={4} className="!text-black !mt-1" /> 
+                      </div>
+                      )
+                    }
+                    </>
+                  )
                  } 
 
-                {/* { !play && <PauseIcon className="mt-1 text-black h-7 w-7" /> || <span>sdks</span> } */}
-                {/* { play &&<FaPlay className="mt-1 text-black h-7 w-7" /> && <div>Pause</div>} */}
-                {/* <span>Play</span> */}
               </button>
               <button className="modalButton">
                 <PlusIcon className="h-7 w-7" />
@@ -180,7 +192,7 @@ function Modal() {
                  <p className="w-full md:w-5/6">
                   { showMore ? movie?.overview.slice(0, 160) : movie?.overview} {showMore && (<span> ... </span>)}
                    <button 
-                     className={`${showMore && "showMoreLessButton"} 
+                     className={`${showMore && "showMoreLessButton font-semibold"} 
                       ${!showMore &&  "showMoreLessButton ml-2"} `}
                      onClick={() => setShowMore(!showMore)}
                     >
