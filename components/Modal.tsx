@@ -63,7 +63,6 @@ function Modal() {
     const handleClose = () => {
         setShowModal(false)
     } 
-  
 
 
     let movieRuntime = trailerDetails?.runtime
@@ -79,7 +78,6 @@ function Modal() {
           movieRuntime !== undefined && <div> {displayHours(hours)} {mins}mins </div>       
         ) 
       }
-    
     }
 
 
@@ -113,10 +111,27 @@ function Modal() {
            <div className="flex space-x-2">
               <button
                  onClick={() => setPlay(!play)}
-                 className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]">
-                <PauseIcon className="mt-1 text-black h-7 w-7" />
-                {/* <FaPlay className="mt-1 text-black h-7 w-7" /> */}
-                Play
+                 className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]"
+                 >
+                 { play ?
+                 (
+                  <>  
+                    <PauseIcon className="mt-1 text-black h-7 w-7" />
+                    Pause
+                  </>
+                 )
+                 :
+                 ( 
+                  <>
+                    <FaPlay className="mt-1 text-black h-7 w-7" /> 
+                    Play
+                  </>
+                 )
+                 } 
+
+                {/* { !play && <PauseIcon className="mt-1 text-black h-7 w-7" /> || <span>sdks</span> } */}
+                {/* { play &&<FaPlay className="mt-1 text-black h-7 w-7" /> && <div>Pause</div>} */}
+                {/* <span>Play</span> */}
               </button>
               <button className="modalButton">
                 <PlusIcon className="h-7 w-7" />
