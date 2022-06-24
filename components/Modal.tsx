@@ -22,9 +22,11 @@ function Modal() {
     const [trailerDetails, setTrailerDetails] = useState<trailerDetailsType | null>(null)
     const [genres, setGenres] = useState<Genre[]>([])
     const [play, setPlay] = useState(false)
-    const [showPause, setShowPause] = useState(false)
+    const [pause, setPause] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [muted, setMuted] = useState(false)
     const [showMore, setShowMore] = useState(true)
+    // const disableLoadingBtn = 
 
 
     useEffect(() => {
@@ -32,7 +34,6 @@ function Modal() {
       isMounted.current = true
 
         if(!movie) return
-
 
         async function fetchMovie() {
             
@@ -91,7 +92,8 @@ function Modal() {
     >
         <>
          <button
-           onClick={handleClose}
+            onClick={handleClose}
+            disabled={loading}
             className="modalButton absolute right-5 top-5 !z-40 h-9 w-9 border-none bg-[#181818]
             hover:bg-[#181818]"
          >
@@ -107,43 +109,51 @@ function Modal() {
               style={{ position: 'absolute', top: '0', left: '0' }}
               muted={muted}
               onReady={(() => setPlay(true))}
-              onBuffer={(() => setShowPause(true))}
+              onBuffer={(() => {
+                setLoading(false)
+                setPause(true)
+              })
+            }
             />
 
          <div className="absolute flex items-center justify-between w-full px-10 bottom-10">
            <div className="flex space-x-2">
               <button
-                 onClick={() => setPlay(!play)}
+                 onClick={() => {
+                  setPlay(!play)
+                  setPause(!pause)
+                }}
                  className="flex items-center gap-x-2 rounded bg-white px-5 md:px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]"
                  >
-                 { play ?
-                  (
-                    <>  
-                      <PauseIcon className="mt-1 text-black h-7 w-7" />
-                      Pause
-                    </>
-                  )
-                  :
-                  ( 
-                    <>
-                    {showPause ?
-                      (
-                        <>
-                          <FaPlay className="mt-1 text-black h-7 w-11" /> 
+                  {/* display play */}
+                  { !play && !pause && !loading &&
+                        (
+                          <>
+                            <FaPlay className="mt-1 text-black h-7 w-11" /> 
                           Play
                         </>
-                      )
-                      :
-                      (
-                      <div className='w-20'>
-                        <CircularProgress size={25} thickness={4} className="!text-black !mt-1" /> 
-                      </div>
-                      )
-                    }
-                    </>
-                  )
-                 } 
-
+                        )
+                  }
+                  
+                  {/* display pause */}
+                  { play && pause && !loading &&
+                    (
+                      <>  
+                        <PauseIcon className="mt-1 text-black h-7 w-7" />
+                        Pause
+                      </>
+                    ) 
+                  
+                  }
+                      
+                   {/* display loading  */}
+                  { loading &&
+                    (
+                    <div className='w-20'>
+                      <CircularProgress size={25} thickness={4} className="!text-black !mt-1" /> 
+                    </div>
+                    ) 
+                  }
               </button>
               <button className="modalButton">
                 <PlusIcon className="h-7 w-7" />
