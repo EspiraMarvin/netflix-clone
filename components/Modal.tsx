@@ -5,7 +5,7 @@ import { modalState, movieState } from '../atoms/modalAtoms'
 import { Element, Genre } from '../typings'
 import ReactPlayer from 'react-player/lazy'
 import { FaPlay } from 'react-icons/fa'
-import { XIcon, PlusIcon, CheckIcon, ThumbUpIcon, VolumeOffIcon, VolumeUpIcon } from '@heroicons/react/outline'
+import { XIcon, PlusIcon, CheckIcon, ThumbUpIcon, VolumeOffIcon, VolumeUpIcon, PauseIcon } from '@heroicons/react/outline'
 import { format } from 'date-fns'
 
 interface trailerDetailsType {
@@ -63,14 +63,23 @@ function Modal() {
     const handleClose = () => {
         setShowModal(false)
     } 
+  
 
-    const movieRuntime = trailerDetails?.runtime
-    let minutes: any = null
-    movieRuntime !== undefined ? minutes = trailerDetails?.runtime : undefined
-    const movieLength = (minutes: number): React.ReactNode => {
-        let hours = Math.floor(minutes/60)
-        let mins = minutes % 60
-        return movieRuntime !== undefined && <div> {hours}hr {mins}mins </div>       
+
+    let movieRuntime = trailerDetails?.runtime
+    const movieLength = (movieRuntime: undefined|null|number): React.ReactNode => {
+      if (movieRuntime) {
+        let hours = Math.floor(movieRuntime/60)
+        let mins = movieRuntime % 60
+        
+        const displayHours = (hours: number): React.ReactNode => {
+          return hours > 0 ? <span>{ hours }hr</span> : ''
+        }
+        return (
+          movieRuntime !== undefined && <div> {displayHours(hours)} {mins}mins </div>       
+        ) 
+      }
+    
     }
 
 
@@ -105,7 +114,8 @@ function Modal() {
               <button
                  onClick={() => setPlay(!play)}
                  className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]">
-                <FaPlay className="mt-1 text-black h-7 w-7" />
+                <PauseIcon className="mt-1 text-black h-7 w-7" />
+                {/* <FaPlay className="mt-1 text-black h-7 w-7" /> */}
                 Play
               </button>
               <button className="modalButton">
@@ -143,7 +153,7 @@ function Modal() {
                   } 
                 </p>
                 <p className='hidden font-light md:inline'>
-                  { movieLength(minutes) }
+                  { movieLength(movieRuntime) }
                 </p>
                 <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-xs">
                 HD 
