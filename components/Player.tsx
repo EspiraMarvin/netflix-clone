@@ -35,7 +35,6 @@ function Player({ trailer }: trailerProps) {
      <div className="flex space-x-2">
         <button
            onClick={() => {
-            // if(loading) return
             setPlay(!play)
             setPause(!pause)
           }}
@@ -87,6 +86,7 @@ function Player({ trailer }: trailerProps) {
      </button>
    </div>
    </div>
+
   )
 }
 
