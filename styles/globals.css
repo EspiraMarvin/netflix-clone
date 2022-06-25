@@ -5,7 +5,7 @@
 /* html, body, heading */
 @layer base {
     html {
-        @apply !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-red-600;
+        @apply !scrollbar !scrollbar-track-transparent !scrollbar-thumb-red-600;
     }
     body {
         @apply bg-[#141414] text-white 
@@ -38,7 +38,12 @@
         @apply flex h-11 w-11 items-center justify-center rounded-full border-2 border-[gray] bg-[#2a2a2a]/60 transition hover:border-white hover:bg-white/10
     }
 
-    .showMoreLessButton {
+    .showMoreButton {
+        @apply  text-sm h-7 px-1.5 rounded  hover:border-white hover:bg-white/10
+    }
+
+    .showLessButton {
         @apply  text-xs h-7 px-1.5 rounded border border-[gray] bg-[#2a2a2a]/60 transition hover:border-white hover:bg-white/10
     }
+    
 }
