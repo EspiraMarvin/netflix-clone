@@ -7,7 +7,6 @@ interface Props {
     // when using firebase
     // movie: Movie | DocumentData 
     movie: Movie
-
 }
 
 function ThumbNail({ movie }: Props) {
