@@ -23,9 +23,6 @@ function login() {
       await signUp(email, password)
     }
   }
-  // console.log(watch("password"))
-  // console.log('errors', errors)
-
 
   return (
     <div className='relative flex flex-col h-screen bg-black md:items-center md:justify-center md:bg-transparent'>
