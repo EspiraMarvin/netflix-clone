@@ -4,13 +4,12 @@ import { useRecoilState } from 'recoil'
 import { modalState, movieState } from '../atoms/modalAtoms'
 import { Element, Genre } from '../typings'
 import { XIcon } from '@heroicons/react/outline'
-import { format } from 'date-fns'
 import Player from './Player';
+import { format } from 'date-fns'
 
 interface trailerDetailsType {
   runtime: number | null
 } 
-
 
 function Modal() {
     const isMounted = useRef(false)
@@ -20,6 +19,8 @@ function Modal() {
     const [trailerDetails, setTrailerDetails] = useState<trailerDetailsType | null>(null)
     const [genres, setGenres] = useState<Genre[]>([])
     const [showMore, setShowMore] = useState(true)
+    const [err, setErr] = useState(null)
+
 
 
     useEffect(() => {
@@ -27,6 +28,7 @@ function Modal() {
       isMounted.current = true
 
         if(!movie) return
+        console.log('current movie', movie)
 
         async function fetchMovie() {
             
@@ -37,7 +39,9 @@ function Modal() {
                     process.env.NEXT_PUBLIC_API_KEY
                   }&language=en-US&append_to_response=videos`
             ).then(response => response.json())
-            .catch(err => console.log('err at modal', err))
+            .catch(err => err)
+            
+            console.log('movies data', data)
             
             if(data?.videos) {
                 const index = data.videos.results.findIndex((element: Element) => element.type === "Trailer")
@@ -60,7 +64,7 @@ function Modal() {
         setShowModal(false)
     } 
 
-
+    // movie length in hours and mins
     let movieRuntime = trailerDetails?.runtime
     const movieLength = (movieRuntime: undefined|null|number): React.ReactNode => {
       if (movieRuntime) {
@@ -74,6 +78,14 @@ function Modal() {
           movieRuntime !== undefined && <div> {displayHours(hours)} {mins}mins </div>       
         ) 
       }
+    }
+
+    // movie description/overview length
+    const overViewLength = movie?.overview.length 
+
+    //  movie release year
+    const showYear = (date: string): React.ReactNode => {
+      return date !== undefined ? format(new Date(date), 'yyyy') : null
     }
 
 
@@ -99,16 +111,13 @@ function Modal() {
             <div className="space-y-6 text-lg">
                <div className="flex items-center space-x-2 text-sm">
                 <p className='font-semibold text-green-400'>{movie!.vote_average * 10}% Match</p>
-                <p className='font-light'>{ movie?.release_date || movie?.first_air_date }</p>
-                {/* <p className='font-light'>{ format(new Date(movie?.release_date), 'yyyy') || format(new Date(movie?.first_air_date), 'yyyy')}</p> */}
-                {/* <p className='font-light'>{ format(new Date(movie?.release_date) || new Date(movie?.first_air_date), 'yyyy')}</p> */}
+                <p className='font-light'>{ showYear(movie?.release_date || movie?.first_air_date) }</p>
+
                 <p className="text-white">
-                  {movie?.adult ? (
-                      <div className="flex items-center justify-center h-4 border rounded border-white/40 px-1.5 text-xs">18+</div>
-                    ) : 
-                    (
-                      <div className="flex items-center justify-center h-4 border rounded border-white/40 px-1.5 text-xs">R</div>
-                    )
+                  {movie?.adult ? 
+                   ( <div className="flex items-center justify-center h-4 border rounded border-white/40 px-1.5 text-xs">18+</div> )
+                   : 
+                   ( <div className="flex items-center justify-center h-4 border rounded border-white/40 px-1.5 text-xs">R</div> )
                   } 
                 </p>
                 <p className='hidden font-light md:inline'>
@@ -122,13 +131,27 @@ function Modal() {
                {/* movie overview/description */}
                <div className="flex flex-col font-light gap-x-10 gap-y-4 md:flex-row">
                  <p className="w-full md:w-5/6">
-                  { showMore ? movie?.overview.slice(0, 160) : movie?.overview} {showMore && (<span> ... </span>)}
+                  {/* length{movie?.overview.length} */}
+                  {
+                    movie?.overview.length > 0 ?
+                    (
+                    <>
+                     { movie?.overview.length > 160 && showMore ? movie?.overview.slice(0, 160) : movie?.overview} {showMore && movie?.overview.length > 160 && (<span> ... </span>) }
+                    </>
+                    )
+                    :
+                    (
+                      <>No Description !!</>
+                    )
+                  }
+                 {/* / { movie?.overview.length > 160 && showMore ? movie?.overview.slice(0, 160) : movie?.overview} {showMore && (<span> ... </span>) } */}
                    <button 
-                     className={`${showMore && "showMoreLessButton font-semibold"} 
-                      ${!showMore &&  "showMoreLessButton ml-2"} `}
+                     className={`${showMore && overViewLength > 160 && "showMoreButton font-semibold"} ${!showMore && overViewLength > 160 &&  "showLessButton ml-1"} `}
                      onClick={() => setShowMore(!showMore)}
                     >
-                     { showMore ? (<span>Show more</span>) : (<span>Show less</span>) }
+                     { showMore && overViewLength > 160 && (<span>Show more</span>) }
+                     { !showMore && overViewLength > 160 && (<span>Show less</span>) }
+
                    </button>
                  </p>
                  <div className='flex flex-col space-y-3 text-sm'>
