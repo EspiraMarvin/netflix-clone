@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import useAuth from '../hooks/useAuth'
 import CircularProgress from '@mui/material/CircularProgress';
+import SplashAnimation from '../components/SplashAnimation'
 
 interface Inputs {
   email: string
@@ -12,9 +13,13 @@ interface Inputs {
 
 function login() {
   const [login, setLogin ] = useState(false)
-  const {signIn, signUp, loadingSignIn, loadingSignUp } = useAuth()
+  const {signIn, signUp, signInAnon , loadingSignIn, loadingSignInAnonymously, loadingSignUp } = useAuth()
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
+
+  const signAnon = async () => {
+    await signInAnon()
+  }
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password}) => {
     if (login) {
@@ -23,6 +28,8 @@ function login() {
       await signUp(email, password)
     }
   }
+
+
 
   return (
     <div className='relative flex flex-col h-screen bg-black md:items-center md:justify-center md:bg-transparent'>
@@ -47,7 +54,7 @@ function login() {
 
       <form onSubmit={handleSubmit(onSubmit)} className='relative px-6 py-10 mt-24 space-y-8 rounded bg-black/75 md:mt-0 md:max-w-md md:px-14'>
         <h1 className="text-4xl font-semibold text-center">Sign In</h1>
-        <div className='space-y-4'>
+        <div className={`space-y-4 ${loadingSignInAnonymously && "opacity-100"}`}>
           <label className='inline-block min-w-full'>
             <input 
               type="email"
@@ -77,6 +84,13 @@ function login() {
         <button className="w-full py-3 rounded bg-[#e50914] font-semibold" onClick={() => setLogin(true)}>
           { !loadingSignIn ?
             <span> Sign In</span>
+            : 
+            <CircularProgress size={25} thickness={4} className="text-white" style={{color: "white"}} /> }
+        </button>
+
+        <button className="w-full py-3 rounded bg-[#e50914] font-semibold" onClick={() => signAnon()}>
+          { !loadingSignInAnonymously ?
+            <span> Sign In Anonymously</span>
             : 
             <CircularProgress size={25} thickness={4} className="text-white" style={{color: "white"}} /> }
         </button>
