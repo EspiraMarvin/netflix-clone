@@ -23,6 +23,11 @@ function Player({ trailer }: trailerProps) {
         height="100%"
         style={{ position: 'absolute', top: '0', left: '0' }}
         muted={muted}
+        onEnded={() => {
+          setPlay(false)
+          setPause(false)
+        } 
+      }
         onReady={(() => setPlay(true))}
         onBuffer={(() => {
           setLoading(false)
