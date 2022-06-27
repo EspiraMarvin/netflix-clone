@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import useAuth from '../hooks/useAuth'
 import CircularProgress from '@mui/material/CircularProgress';
-import SplashAnimation from '../components/SplashAnimation'
+// import SplashAnimation from '../components/SplashAnimation'
 
 interface Inputs {
   email: string
