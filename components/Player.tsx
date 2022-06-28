@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import ReactPlayer from 'react-player/lazy'
 import CircularProgress from '@mui/material/CircularProgress';
 import { FaPlay } from 'react-icons/fa'
@@ -13,10 +13,6 @@ function Player({ trailer }: trailerProps) {
     const [pause, setPause] = useState(false)
     const [loading, setLoading] = useState(true)
     const [muted, setMuted] = useState(false)
-
-    useEffect(() => {
-      console.log('watch play', play)
-    }, [play])
 
   return (
     <div className="relative pt-[56.25%]">
