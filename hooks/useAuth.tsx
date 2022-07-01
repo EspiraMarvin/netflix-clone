@@ -8,7 +8,7 @@ import {
     signOut,
     User
 } from 'firebase/auth'
-import { auth } from '../firebase'
+import { auth } from '../lib/firebase'
 
 
 interface IAuth { //inteface auth(IAuth)
