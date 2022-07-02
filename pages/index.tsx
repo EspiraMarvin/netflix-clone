@@ -1,6 +1,5 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import Header from '../components/Header'
 import Banner from '../components/Banner'
 import requests from '../utils/requests'
@@ -11,6 +10,9 @@ import { useRecoilValue } from 'recoil'
 import { modalState } from '../atoms/modalAtoms'
 import Modal from '../components/Modal'
 import Plans from '../components/Plans'
+import { getProducts, Product } from '@stripe/firestore-stripe-payments'
+import payments from '../lib/stripe'
+import { useEffect, useRef } from 'react'
 
 interface Props {
   netflixOriginals: Movie[]
@@ -20,7 +22,8 @@ interface Props {
   comedyMovies: Movie[]
   horrorMovies: Movie[]
   romanceMovies: Movie[]
-  documentaries: Movie[]
+  documentaries: Movie[],
+  products?: Product[] | undefined
 }
 
 const Home = ({ 
@@ -31,8 +34,10 @@ const Home = ({
   comedyMovies, 
   horrorMovies, 
   romanceMovies,
-  documentaries
+  documentaries,
+  products
 }: Props) => {
+  console.log('products', products)
     const { loading } = useAuth()
     const showModal = useRecoilValue(modalState)
     const subscription = false
@@ -45,6 +50,16 @@ const Home = ({
 
   if (!subscription) return <Plans />
   
+  useEffect(() => {
+    console.log('mounted')
+
+    const isMounted = useRef(false)
+
+    console.log('mounted')
+   if (isMounted.current)  return 
+   isMounted.current = true
+   
+  }, [])
 
   return (
     <div className="relative h-screen lg:h-[140vh]">
@@ -80,6 +95,17 @@ const Home = ({
 export default Home
 
 export const getServerSideProps = async () => {
+
+  // produts pricing plans
+  const products = await getProducts(payments, {
+    includePrices: true,
+    activeOnly: true
+  }).then((res) => {
+    console.log('res',res)
+    return JSON.parse(JSON.stringify(res))
+  })
+  .catch(error => console.log(error.message))
+
   const [
     netflixOriginals,
     trendingNow,
@@ -100,6 +126,8 @@ export const getServerSideProps = async () => {
     fetch(requests.fetchDocumentaries).then((res) => res.json()),
   ])
 
+
+  // return { props: JSON.parse(JSON.stringify(props)) }
   return {
     props: {
       netflixOriginals: netflixOriginals.results,
@@ -109,7 +137,8 @@ export const getServerSideProps = async () => {
       comedyMovies: comedyMovies.results,
       horrorMovies: horrorMovies.results,
       romanceMovies: romanceMovies.results,
-      documentaries: documentaries.results,
+      documentaries: documentaries.results, 
+      // products
     }
   }
 }
