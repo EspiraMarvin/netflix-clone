@@ -47,16 +47,14 @@ function Plans() {
             </button>
         </header>
 
-        <main className="max-w-5xl px-5 pb-12 font-medium transition-all mb-5text-3xl pt-28 md:px-10">
-            <h1>Choose the plan that's right for you</h1>
+        <main className="max-w-5xl px-1 pb-12 mb-5 font-medium transition-all xl:text-2xl pt-28 md:px-10">
+            <h1 className="mb-4 xl:text-3xl">Choose the plan that's right for you</h1>
             {/* plans description list */}
             {PlansDescList()}
 
             <div className="flex flex-col mt-4 space-y-4">
                 <div className="flex items-center self-end justify-end w-full md:w-3/5">
-                    <div className="planBox">standard</div>
-                    <div className="planBox">standard</div>
-                    <div className="planBox">standard</div>
+                    {}
                 </div>
 
                 {/* <Table/> */}
