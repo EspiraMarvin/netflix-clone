@@ -1,4 +1,3 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import Header from '../components/Header'
 import Banner from '../components/Banner'
@@ -13,6 +12,7 @@ import Plans from '../components/Plans'
 import { getProducts, Product } from '@stripe/firestore-stripe-payments'
 import payments from '../lib/stripe'
 import { useEffect, useRef } from 'react'
+import useSubscription from '../hooks/useSubscription'
 
 interface Props {
   netflixOriginals: Movie[]
@@ -23,7 +23,7 @@ interface Props {
   horrorMovies: Movie[]
   romanceMovies: Movie[]
   documentaries: Movie[],
-  products?: Product[] | undefined
+  products: Product[] 
 }
 
 const Home = ({ 
@@ -37,29 +37,39 @@ const Home = ({
   documentaries,
   products
 }: Props) => {
-  console.log('products', products)
-    const { loading } = useAuth()
+    const { loading, user } = useAuth()
     const showModal = useRecoilValue(modalState)
-    const subscription = false
+    const subscription = useSubscription(user)
   
   // if (loading) return (
     // "loading"
   // )
   
   if (loading || subscription === null) return null
+  if (!subscription) return <Plans products={products} />
+  // const isMounted = useRef<boolean>(false)
+    
 
-  if (!subscription) return <Plans />
-  
-  useEffect(() => {
-    console.log('mounted')
+  // useEffect(() => {
+//  if (isMounted.current)  return 
+//  isMounted.current = true
+    
+      // const fetchProducts =async () => {
+      //   const products = await getProducts(payments, {
+      //     includePrices: true,
+      //     activeOnly: true
+      //   }).then((res) => {
+      //     console.log('res', res)
+      //     return res
+      //   })
+      //     .catch(error => console.log(error.message))
 
-    const isMounted = useRef(false)
+      // }
 
-    console.log('mounted')
-   if (isMounted.current)  return 
-   isMounted.current = true
-   
-  }, [])
+
+      // fetchProducts()
+    // }, [])
+    
 
   return (
     <div className="relative h-screen lg:h-[140vh]">
@@ -100,11 +110,8 @@ export const getServerSideProps = async () => {
   const products = await getProducts(payments, {
     includePrices: true,
     activeOnly: true
-  }).then((res) => {
-    console.log('res',res)
-    return JSON.parse(JSON.stringify(res))
-  })
-  .catch(error => console.log(error.message))
+  }).then((res) => res)
+    .catch(error => console.log(error.message))
 
   const [
     netflixOriginals,
@@ -126,8 +133,6 @@ export const getServerSideProps = async () => {
     fetch(requests.fetchDocumentaries).then((res) => res.json()),
   ])
 
-
-  // return { props: JSON.parse(JSON.stringify(props)) }
   return {
     props: {
       netflixOriginals: netflixOriginals.results,
@@ -138,7 +143,7 @@ export const getServerSideProps = async () => {
       horrorMovies: horrorMovies.results,
       romanceMovies: romanceMovies.results,
       documentaries: documentaries.results, 
-      // products
+      products
     }
   }
 }
