@@ -12,7 +12,7 @@
     "@mui/material": "^5.8.5",
     "@stripe/firestore-stripe-payments": "^0.0.6",
     "date-fns": "^2.28.0",
-    "firebase": "^9.8.3",
+    "firebase": "^9.6.10",
     "framer-motion": "^6.3.15",
     "next": "latest",
     "next-transpile-modules": "^9.0.0",
