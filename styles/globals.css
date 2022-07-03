@@ -50,11 +50,26 @@
     }
     
     .planBox {
-        @apply relative m-1 flex h-20 bg-[#e50914] w-[calc(100%/4)] cursor-default
+        @apply relative m-1 flex h-20 bg-[#e50914] w-[calc(100%/4)] cursor-default 
          items-center justify-center rounded-sm font-semibold shadow 
         after:absolute after:top-full after:left-1/2 after:block after:-translate-x-1/2 
         after:border-8 after:border-b-0 after:border-transparent after:border-t-[#e50914]
         after:content-[""]
         md:h-32 lg:mx-2
     }
+
+    /* Table styling */
+    .tableRow {
+        @apply flex flex-wrap items-center font-medium
+    }
+
+    .tableDataTitle {
+        @apply w-full p-2.5 text-center text-sm font-normal text-white md:w-2/5 md:p-3.5 md:text-left 
+    }
+    
+    .tableDataFeature {
+        @apply w-[calc(100%/4)] p-2.5  text-center md:w-[calc(60%/4)] md:p-3.5 md:text-lg
+    }
+
+
 }
