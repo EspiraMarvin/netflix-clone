@@ -1,13 +1,50 @@
-import { jsx } from '@emotion/react'
 import { CheckIcon } from '@heroicons/react/outline'
+import { getProducts, Product } from '@stripe/firestore-stripe-payments'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
 import useAuth from '../hooks/useAuth'
+import { loadCheckout } from '../lib/stripe'
+import Loader from './Loader'
+import Table from './Table'
+import payments from '../lib/stripe'
 
-function Plans() {
-    const { logOut } = useAuth()
 
-    const PlansDescList  = (): React.ReactNode => 
+interface Props {
+    products: Product[]
+}
+
+const Plans = ({ products }: Props) => {
+    const { logOut, user } = useAuth()
+    const [selectedPlan, setSelectedPlan] = useState<Product | null>(products[3])
+    const [billingLoading, setBillingLoading] = useState(false)
+    const isMounted = useRef(false)
+
+    useEffect(() => {
+         if (isMounted.current)  return 
+         isMounted.current = true
+            
+               async function fetchPlans() {
+                console.log('fetchPlans')
+                  await getProducts(payments, {
+                      includePrices: true,
+                      activeOnly: true
+                    }).then((res) => {
+                      console.log('res',res)
+                      return res
+                      // console.log('res res res res stringfy', JSON.parse(JSON.stringify(res)))
+        
+                      // return JSON.parse(JSON.stringify(res))
+                      return res
+                    })
+                    .catch(error => console.log('error', error))
+                }
+        
+                fetchPlans()
+            }, [])
+        
+
+    const PlansDescList = (): React.ReactNode => 
          (
             <ul>
               <li className="flex items-center text-lg gap-x-2">
@@ -24,6 +61,13 @@ function Plans() {
              </li>
             </ul>
         )
+
+        const subscribeToPlan = () => {
+            if(!user) return
+
+            loadCheckout(selectedPlan?.prices[0].id!)
+            setBillingLoading(true)
+        }
 
   return (
     <div>
@@ -47,19 +91,43 @@ function Plans() {
             </button>
         </header>
 
-        <main className="max-w-5xl px-1 pb-12 mb-5 font-medium transition-all xl:text-2xl pt-28 md:px-10">
-            <h1 className="mb-4 xl:text-3xl">Choose the plan that's right for you</h1>
+        <main className="max-w-5xl px-1 pb-12 mx-auto mb-5 font-medium transition-all pt-28 md:px-10">
+            <h1 className="mb-4 text-xl xl:text-2xl">Choose the plan that's right for you</h1>
             {/* plans description list */}
             {PlansDescList()}
 
             <div className="flex flex-col mt-4 space-y-4">
                 <div className="flex items-center self-end justify-end w-full md:w-3/5">
-                    {}
+                    {products.map(product => (
+                        <div
+                         key={product.id} 
+                         className={`planBox
+                         ${selectedPlan?.id === product.id ? "opacity-100" : "opacity-60"}`}
+                         onClick = {() => setSelectedPlan(product)}
+                        >
+                          {product.name}
+                        </div>
+                    ))
+                    }
                 </div>
 
-                {/* <Table/> */}
+                <Table products={products} selectedPlan={selectedPlan} />
 
-                <button>Subscribe</button>
+                <button
+                   disabled={!selectedPlan || billingLoading}
+                   className={`mx-auto w-11/12 rounded bg-[#E50914] py-4 text-xl shadow hover:bg-[#f6121d] md:w-[420px] ${
+                    billingLoading && 'opacity-60'
+                    }`}
+                   onClick={subscribeToPlan}
+                >
+                    {billingLoading ? (
+                      <Loader color="dark:fill-gray-300" />
+                    )
+                    :
+                    ( 'Subscribe' )
+
+                    }
+                </button>
             </div>
         </main>
     </div>
