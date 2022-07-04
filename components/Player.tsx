@@ -69,8 +69,9 @@ function Player({ trailer }: trailerProps) {
              {/* display loading  */}
             { loading &&
               (
-              <div className='w-20'>
-                <CircularProgress size={25} thickness={4} className="!text-black !mt-1" /> 
+              <div className='flex items-center justify-between w-24 font-normal'>
+               <div className='-ml-3'>Loading...</div> 
+               <CircularProgress size={20} thickness={5} className="!text-black -mr-3" /> 
               </div>
               ) 
             }
