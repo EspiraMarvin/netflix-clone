@@ -41,7 +41,7 @@ function Modal() {
             ).then(response => response.json())
             .catch(err => err)
             
-            console.log('movies data', data)
+            // console.log('movies data', data)
             
             if(data?.videos) {
                 const index = data.videos.results.findIndex((element: Element) => element.type === "Trailer")
@@ -110,7 +110,7 @@ function Modal() {
          <div className="flex space-x-16 rounded-b-md bg-[#181818] px-10 py-8">
             <div className="space-y-6 text-lg">
                <div className="flex items-center space-x-2 text-sm">
-                <p className='font-semibold text-green-400'>{movie!.vote_average * 10}% Match</p>
+                <p className='font-semibold text-green-400'>{(movie!.vote_average * 10).toFixed(2)}% Match</p>
                 <p className='font-light'>{ showYear(movie?.release_date || movie?.first_air_date) }</p>
 
                 <p className="text-white">
