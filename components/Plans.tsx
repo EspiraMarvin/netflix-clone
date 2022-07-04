@@ -5,10 +5,9 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import useAuth from '../hooks/useAuth'
 import { loadCheckout } from '../lib/stripe'
+import payments from '../lib/stripe'
 import Loader from './Loader'
 import Table from './Table'
-import payments from '../lib/stripe'
-
 
 interface Props {
     products: Product[]
@@ -25,12 +24,11 @@ const Plans = ({ products }: Props) => {
          isMounted.current = true
             
                async function fetchPlans() {
-                console.log('fetchPlans')
                   await getProducts(payments, {
                       includePrices: true,
                       activeOnly: true
                     }).then((res) => {
-                      console.log('res',res)
+                    //   console.log('res',res)
                       return res
                       // console.log('res res res res stringfy', JSON.parse(JSON.stringify(res)))
         
@@ -40,7 +38,7 @@ const Plans = ({ products }: Props) => {
                     .catch(error => console.log('error', error))
                 }
         
-                fetchPlans()
+                // fetchPlans()
             }, [])
         
 
@@ -114,19 +112,17 @@ const Plans = ({ products }: Props) => {
                 <Table products={products} selectedPlan={selectedPlan} />
 
                 <button
-                   disabled={!selectedPlan || billingLoading}
-                   className={`mx-auto w-11/12 rounded bg-[#E50914] py-4 text-xl shadow hover:bg-[#f6121d] md:w-[420px] ${
+                    disabled={!selectedPlan || billingLoading}
+                    className={`mx-auto w-11/12 rounded bg-[#E50914] py-4 text-xl shadow hover:bg-[#f6121d] md:w-[420px] ${
                     billingLoading && 'opacity-60'
                     }`}
-                   onClick={subscribeToPlan}
+                    onClick={subscribeToPlan}
                 >
                     {billingLoading ? (
-                      <Loader color="dark:fill-gray-300" />
-                    )
-                    :
-                    ( 'Subscribe' )
-
-                    }
+                    <Loader color="dark:fill-gray-300" />
+                    ) : (
+                    'Subscribe'
+                    )}
                 </button>
             </div>
         </main>
