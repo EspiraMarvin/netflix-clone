@@ -3,6 +3,7 @@ import React, {useRef} from 'react'
 import { motion } from "framer-motion"
 const TADUM_SOUND_URL = 'https://cdn.jsdelivr.net/gh/Th3Wall/assets-cdn/Fakeflix/Fakeflix_TaDum.mp3'
 
+
 function SplashAnimation() {
 
     const soundRef = useRef(null)
@@ -25,7 +26,8 @@ function SplashAnimation() {
     exit={{opacity: 0}}
 >
     <audio ref={soundRef} src={TADUM_SOUND_URL} />
-    <div className="netflixintro">
+    {/* <div className="netflixintro"> */}
+    <div className="netflixintro"> N
     {/* <div className="netflixintro" letter="N"> */}
         <div className="helper-1">
             <div className="effect-brush">
