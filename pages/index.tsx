@@ -11,8 +11,8 @@ import Modal from '../components/Modal'
 import Plans from '../components/Plans'
 import { getProducts, Product } from '@stripe/firestore-stripe-payments'
 import payments from '../lib/stripe'
-import { useEffect, useRef } from 'react'
 import useSubscription from '../hooks/useSubscription'
+import { useEffect, useRef } from 'react'
 
 interface Props {
   netflixOriginals: Movie[]
