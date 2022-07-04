@@ -25,7 +25,8 @@ function SplashAnimation() {
     exit={{opacity: 0}}
 >
     <audio ref={soundRef} src={TADUM_SOUND_URL} />
-    <div className="netflixintro" letter="N">
+    <div className="netflixintro">
+    {/* <div className="netflixintro" letter="N"> */}
         <div className="helper-1">
             <div className="effect-brush">
                 <span className="fur-31"></span>
