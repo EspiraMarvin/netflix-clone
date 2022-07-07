@@ -88,12 +88,12 @@ function login() {
             <CircularProgress size={25} thickness={4} className="text-white" style={{color: "white"}} /> }
         </button>
 
-        <button className="w-full py-3 rounded bg-[#e50914] font-semibold" onClick={() => signAnon()}>
+        {/* <button className="w-full py-3 rounded bg-[#e50914] font-semibold" onClick={() => signAnon()}>
           { !loadingSignInAnonymously ?
             <span> Sign In Anonymously</span>
             : 
             <CircularProgress size={25} thickness={4} className="text-white" style={{color: "white"}} /> }
-        </button>
+        </button> */}
 
         <div className='text-[gray]'>
           New to Netflix?  {' '}
