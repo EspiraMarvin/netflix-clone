@@ -1,7 +1,6 @@
 import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { FaArrowDown } from "react-icons/fa"
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useState } from 'react'
 
