@@ -11,17 +11,6 @@ import { getAuth } from 'firebase/auth'
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  // netflix-clone-70812.firebaseapp.com
-  // https://netflix-clone-70812-default-rtdb.firebaseio.com
-  // https://netflix-clone-70812.firebaseapp.com-default-rtdb.firebaseio.com
-  // https://netflix-clone-70812-default-rtdb.firebaseio.com
-  // https://next-firebase-stripe-39bf8-default-rtdb.firebaseio.com
-  // databaseURL: 'https://next-firebase-stripe-70812-default-rtdb.firebaseio.com',
-
-  // databaseURL: "https:/netflix-clone-70812/firebaseio.com",
-  // databaseURL: "https://console.firebase.google.com/u/0/project/netflix-clone-70812/firestore/data/~2F",
-  // databaseURL: "https://netflix-clone-70812-default-rtdb.firebaseio.com",
-  // databaseURL: 'https://netflix-clone-70812-default-rtdb.firebaseio.com',
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
