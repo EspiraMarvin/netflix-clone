@@ -17,7 +17,7 @@ interface Props {
 function Player({ trailer}: Props) {
     const [movie, setMovie] = useRecoilState(movieState)
     const [play, setPlay] = useState(false)
-    const [pause, setPause] = useState(false)
+    const [pause, setPause] = useState(true)
     const [loading, setLoading] = useState(true)
     const [muted, setMuted] = useState(false)
     const { user } = useAuth()
@@ -26,19 +26,20 @@ function Player({ trailer}: Props) {
 
     const handleList = async () => {
       toast(`${movie?.title || movie?.original_name} has been picked`)
-      if(addedToList) {
-        await deleteDoc(
-          doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!)
-        )
+        if(addedToList) {
+          await deleteDoc(
+            doc(db, "customers", user!.uid, "myList", movie?.id.toString()!)
+          )
 
-        toast(`${movie?.title || movie?.original_name} has been removed from My List`,
-         {
-          duration: 7000
-        }
-      )
+          toast(`${movie?.title || movie?.original_name} has been removed from My List`,
+          {
+            duration: 7000
+          }
+        )
       } else {
+        console.log('add movie to myList')
         await setDoc(
-          doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!),
+          doc(db, "customers", user!.uid, "myList", movie?.id.toString()!),
           {...movie}
          )
 
@@ -68,17 +69,16 @@ function Player({ trailer}: Props) {
         height="100%"
         style={{ position: 'absolute', top: '0', left: '0' }}
         muted={muted}
+        onReady={(() => setLoading(false))}
+        onBuffer={(() => {
+          setLoading(false)
+          setPause(false)
+          })
+        }
         onEnded={() => {
           setPlay(false)
           setPause(false)
-        } 
-      }
-        onReady={(() => setPlay(true))}
-        onBuffer={(() => {
-          setLoading(false)
-          setPause(true)
-        })
-      }
+        }}
       />
 
    <div className="absolute flex items-center justify-between w-full px-10 bottom-10">
@@ -91,7 +91,7 @@ function Player({ trailer}: Props) {
            className="flex items-center gap-x-2 rounded bg-white px-5 md:px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]"
            >
             {/* display play */}
-            { !play && !pause && !loading &&
+            { !play && pause && !loading &&
                 <>
                   <FaPlay className="mt-1 text-black h-7 w-11" /> 
                   Play
@@ -99,7 +99,7 @@ function Player({ trailer}: Props) {
             }
             
             {/* display pause */}
-            { play && pause && !loading &&
+            { play && !pause && !loading &&
                 <>  
                   <PauseIcon className="mt-1 text-black h-7 w-7" />
                   Pause
