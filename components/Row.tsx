@@ -9,9 +9,8 @@ import ThumbNail from './ThumbNail'
 
 interface Props {
     title: string
-    // using firebase
-  //  movies: Movie[] | DocumentData[]
-    movies: Movie[]
+    // using firebase. Movies from myList 
+   movies: Movie[] | DocumentData[]
   }
 
   
