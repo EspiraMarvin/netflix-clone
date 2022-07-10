@@ -26,8 +26,6 @@ function Modal() {
       isMounted.current = true
 
         if(!movie) return
-        // console.log('current movie', movie)
-
 
         async function fetchMovie() {
             
@@ -40,8 +38,6 @@ function Modal() {
             ).then(response => response.json())
             .catch(err => err)
             
-            // console.log('movies data', data)
-            
             if(data?.videos) {
                 const index = data.videos.results.findIndex((element: Element) => element.type === "Trailer")
                 setTrailer(data.videos?.results[index]?.key)
@@ -52,7 +48,6 @@ function Modal() {
               setGenres(data.genres)
             }
         }
-        // console.log('trailer details runtime', trailerDetails?.runtime)
 
         fetchMovie()
 
