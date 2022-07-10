@@ -3,15 +3,26 @@ import ReactPlayer from 'react-player/lazy'
 import CircularProgress from '@mui/material/CircularProgress';
 import { FaPlay } from 'react-icons/fa'
 import { PlusIcon, CheckIcon, ThumbUpIcon, VolumeOffIcon, VolumeUpIcon, PauseIcon } from '@heroicons/react/outline'
-import { deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, DocumentData, onSnapshot, setDoc } from 'firebase/firestore';
 import { useRecoilState } from 'recoil';
 import { movieState } from '../atoms/modalAtoms';
 import useAuth from '../hooks/useAuth';
 import { db } from '../lib/firebase';
 import toast, { Toaster } from 'react-hot-toast'
+import { Movie } from '../typings';
 
 interface Props {
     trailer: string
+  }
+
+  const toastStyle = {
+    backgroundColor: 'white',
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    padding: '15px',
+    borderRadius: '9999px',
+    maxWidth: '1000px',
   }
 
 function Player({ trailer}: Props) {
@@ -23,9 +34,30 @@ function Player({ trailer}: Props) {
     const { user } = useAuth()
     const [addedToList, setAddedToList] = useState(false)
     const isMounted = useRef(false)
+    const [movies, setMovies] = useState<DocumentData[] | Movie[]>([])
+
+
+  // Find all the movies in the user's list
+  useEffect(() => {
+    if (user) {
+      return onSnapshot(
+        collection(db, 'customers', user.uid, 'myList'),
+        (snapshot) => setMovies(snapshot.docs)
+      )
+    }
+  }, [db, movie?.id])
+
+  // Check if the movie is already in the user's list // returns true if its found, returns false otherwise 
+  useEffect(
+    () =>
+      setAddedToList(
+        movies.findIndex((result) => result.data().id === movie?.id) !== -1
+      ),
+    [movies]
+  )
+
 
     const handleList = async () => {
-      toast(`${movie?.title || movie?.original_name} has been picked`)
         if(addedToList) {
           await deleteDoc(
             doc(db, "customers", user!.uid, "myList", movie?.id.toString()!)
@@ -33,11 +65,10 @@ function Player({ trailer}: Props) {
 
           toast(`${movie?.title || movie?.original_name} has been removed from My List`,
           {
-            duration: 7000
+            duration: 7000, style: toastStyle 
           }
         )
       } else {
-        console.log('add movie to myList')
         await setDoc(
           doc(db, "customers", user!.uid, "myList", movie?.id.toString()!),
           {...movie}
@@ -45,9 +76,9 @@ function Player({ trailer}: Props) {
 
          toast(`${movie?.title || movie?.original_name} has been added to My List`,
          {
-          duration: 7000
-        }
-      )
+          duration: 7000, style: toastStyle 
+         }
+       )
       }
     }
 
