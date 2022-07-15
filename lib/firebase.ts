@@ -23,14 +23,13 @@ const firebaseConfig = {
 // check if the app is not initialized, then initialize 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
-// if (!getApps().length){
-//   getAnalytics(app)
-// } else {
-//   getApp()
-// }
+if (!getApps().length){
+  getAnalytics(app)
+} else {
+  getApp()
+}
 
 initializeApp(firebaseConfig)
-getAnalytics(app)
 
 const db = getFirestore()
 const auth = getAuth()
