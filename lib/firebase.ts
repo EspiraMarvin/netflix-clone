@@ -31,10 +31,6 @@ if (!getApps().length){
 
 initializeApp(firebaseConfig)
 
-
-// if(typeof window != undefined){
-//   getAnalytics(app)
-// }
 const db = getFirestore()
 const auth = getAuth()
 export default app
