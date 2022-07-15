@@ -21,11 +21,9 @@ const firebaseConfig = {
 
 // Initialize Firebase 
 // check if the app is not initialized, then initialize 
-// const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
-let app = null
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
 if (!getApps().length){
-  app = initializeApp(firebaseConfig)
   getAnalytics(app)
 } else {
   getApp()
