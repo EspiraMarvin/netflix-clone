@@ -1,5 +1,6 @@
+import { getAnalytics } from 'firebase/analytics';
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApp, getApps } from 'firebase/app'
+import firebase, { initializeApp, getApp, getApps } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { getAnalytics } from "firebase/analytics";
@@ -21,11 +22,22 @@ const firebaseConfig = {
 
 // Initialize Firebase 
 // check if the app is not initialized, then initialize 
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
+// const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
+let app = null
 
-if(typeof window != undefined){
+if (!getApps().length){
+  app = initializeApp(firebaseConfig)
   getAnalytics(app)
+} else {
+  getApp()
 }
+
+initializeApp(firebaseConfig)
+
+
+// if(typeof window != undefined){
+//   getAnalytics(app)
+// }
 const db = getFirestore()
 const auth = getAuth()
 export default app
