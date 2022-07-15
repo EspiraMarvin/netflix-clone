@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  app:
+    build: .
+    container_name: fakeflix_netflix_c
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - .:/fakeflix_netflix
+      - ./node_modules
+    stdin_open: true
+    tty: true    
