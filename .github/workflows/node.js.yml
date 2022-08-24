@@ -12,6 +12,9 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    env:
+      ## Environment variable
+      NEXT_PUBLIC_API_KEY: "0d0b5832cfa49763f88f5a9c66de89c6"    
     
     strategy:
       matrix:
