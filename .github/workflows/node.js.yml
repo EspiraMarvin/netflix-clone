@@ -15,6 +15,13 @@ jobs:
     env:
       ## Environment variable
       NEXT_PUBLIC_API_KEY: "0d0b5832cfa49763f88f5a9c66de89c6"    
+      NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyDB6GYyY_gTMG3qH0tvbEFwpQc2X52wvk8"
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "netflix-clone-70812.firebaseapp.com" 
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: "netflix-clone-70812"
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "netflix-clone-70812.appspot.com"
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "11673026506"
+      NEXT_PUBLIC_FIREBASE_APP_ID: "1:11673026506:web:c37d222e21e770930ad933"
+      NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: "G-Y3JFFG9B3W"
     
     strategy:
       matrix:
