@@ -10,6 +10,7 @@ import useAuth from '../hooks/useAuth';
 import { db } from '../lib/firebase';
 import toast, { Toaster } from 'react-hot-toast'
 import { Movie } from '../typings';
+import Tudum from './Tadum'
 
 interface Props {
     trailer: string
@@ -28,6 +29,8 @@ interface Props {
 function Player({ trailer}: Props) {
     const [movie, setMovie] = useRecoilState(movieState)
     const [play, setPlay] = useState(false)
+    const [playTadum, setPlayTadum] = useState(false)
+
     const [pause, setPause] = useState(true)
     const [loading, setLoading] = useState(true)
     const [muted, setMuted] = useState(false)
@@ -36,6 +39,11 @@ function Player({ trailer}: Props) {
     const isMounted = useRef(false)
     const [movies, setMovies] = useState<DocumentData[] | Movie[]>([])
 
+  // play tadum sound
+  useEffect(() => {
+    if (play === false) return
+    if (play === true) setPlayTadum(true)
+  }, [play])
 
   // Find all the movies in the user's list
   useEffect(() => {
@@ -55,7 +63,6 @@ function Player({ trailer}: Props) {
       ),
     [movies]
   )
-
 
     const handleList = async () => {
         if(addedToList) {
@@ -82,8 +89,6 @@ function Player({ trailer}: Props) {
       }
     }
 
-    // console.log('addedToList', addedToList)
-
     useEffect(() => { 
       if (isMounted.current) return 
       isMounted.current = true
@@ -100,7 +105,7 @@ function Player({ trailer}: Props) {
         height="100%"
         style={{ position: 'absolute', top: '0', left: '0' }}
         muted={muted}
-        onReady={(() => setLoading(false))}
+        onReady={() => setLoading(false)}
         onBuffer={(() => {
           setLoading(false)
           setPause(false)
@@ -136,6 +141,8 @@ function Player({ trailer}: Props) {
                   Pause
                 </>
             }
+
+            {playTadum && <Tudum />}
                 
              {/* display loading  */}
             { loading &&
