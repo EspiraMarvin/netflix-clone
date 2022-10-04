@@ -1,5 +1,5 @@
 import { onSnapshot, collection, DocumentData } from 'firebase/firestore'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { db } from '../lib/firebase'
 import { Movie } from '../typings'
 
@@ -19,7 +19,7 @@ function useList(uid: string | undefined) {
               ...doc.data()
             }))
           )
-          console.log('list of movies at useList hook',list)
+          // console.log('list of movies at useList hook',list)
         }
       )
     }, [db, uid])

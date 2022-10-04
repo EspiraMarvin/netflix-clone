@@ -68,7 +68,10 @@ const Home = ({
           <Row title="Action Thrillers" movies={actionMovies} />
 
           {/* my list component */}
+          {
+            list.length > 0 &&
            <Row title="My List" movies={list} />
+          }
            {/* my list component */}
            {/* {list.length > 0 && <Row title="My List" movies={list} />} */}
 

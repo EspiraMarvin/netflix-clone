@@ -3,9 +3,11 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+        - main 
+        - develop
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
     
 
 jobs:
@@ -25,7 +27,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [14.x, 16.x]
         
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
