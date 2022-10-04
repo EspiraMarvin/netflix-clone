@@ -5,8 +5,6 @@ import { useState, useRef } from 'react'
 import { Movie } from '../typings'
 import ThumbNail from './ThumbNail'
 
-
-
 interface Props {
     title: string
     // using firebase. Movies from myList 
