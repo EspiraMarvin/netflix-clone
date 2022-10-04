@@ -43,6 +43,10 @@ function Player({ trailer}: Props) {
   useEffect(() => {
     if (play === false) return
     if (play === true) setPlayTadum(true)
+
+    return(() => {
+      setPlayTadum(false)
+    })
   }, [play])
 
   // Find all the movies in the user's list
