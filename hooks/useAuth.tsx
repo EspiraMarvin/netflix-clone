@@ -9,7 +9,7 @@ import {
     User
 } from 'firebase/auth'
 import { auth } from '../lib/firebase'
-
+import toast from 'react-hot-toast'
 
 interface IAuth { //inteface auth(IAuth)
     user: User | null
@@ -83,7 +83,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 // setLoading(false)
                 setLoadingSignUp(false)
             })
-            .catch(error => alert(error.message))
+            .catch(error => toast(`${error.message}`))
             .finally(() => {
                 setLoadingSignUp(false)
                 setLoading(false)
@@ -102,7 +102,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 setLoading(false)
                 setLoadingSignIn(false)
             })
-            .catch(error => alert(error.message))
+            .catch(error => toast(`${error.message}`))
             .finally(() => {
             setLoadingSignIn(false)
             setLoading(false)
@@ -116,16 +116,16 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
 
         await signInAnonymously(auth)
             .then((userCredential) => {
-                console.log('signed in anonymously')
+                // console.log('signed in anonymously')
 
-                console.log('signed in anonymously', userCredential)
+                // console.log('signed in anonymously', userCredential)
                 
                 setUser(userCredential.user)
                 router.push('/')
                 setLoading(false)
                 setLoadingSignInAnonymously(false)
             })
-            .catch(error => alert(error.message))
+            .catch(error => toast(`${error.message}`))
             .finally(() => {
             setLoadingSignInAnonymously(false)
             setLoading(false)
@@ -140,7 +140,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
             .then(() => {
                 setUser(null)
             })
-            .catch(error => alert(error.message))
+            .catch(error => toast(`${error.message}`))
             .finally(() => setLoading(false))
     }
 

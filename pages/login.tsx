@@ -4,8 +4,6 @@ import Image from 'next/image'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import useAuth from '../hooks/useAuth'
 import CircularProgress from '@mui/material/CircularProgress';
-// import SplashAnimation from '../components/SplashAnimation'
-import { ArrowDownIcon } from '@heroicons/react/solid'
 
 interface Inputs {
   email: string
@@ -29,7 +27,6 @@ function login() {
       await signUp(email, password)
     }
   }
-
 
 
   return (
