@@ -116,11 +116,6 @@ function login() {
         </div>
       </form>
 
-      <div className='absolute bottom-2 right-4 hover:bg-[#e50914] hover:p-4 md:p-3 md:bg-[#e50914] cursor-pointer'>
-        <a href="https://www.linkedin.com/in/marvin-espira/" target="_blank"> By Marvin Espira</a>
-       
-      </div>
-
     </div>
   )
 }
