@@ -1,0 +1,75 @@
+# Install dependencies only when needed
+FROM node:16-alpine AS deps
+
+ENV NODE_ENV=production
+
+#Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+COPY package.json yarn.lock tailwind.config.js tsconfig.json typings.d.ts postcss.config.js ./
+
+RUN yarn add --dev typescript @types/node 
+
+# RUN yarn add --dev typescript @types/node eslint
+
+
+RUN yarn install --frozen-lockfile
+
+# Rebuild the source code only when needed
+FROM node:alpine AS builder
+
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+COPY next.config.js ./
+COPY package.json yarn.lock ./
+COPY --from=deps /app/node_modules ./node_modules
+
+# COPY . .
+COPY pages ./pages
+COPY components ./components
+COPY context ./context
+COPY data ./data
+COPY hooks ./hooks
+COPY slices ./slices
+
+
+COPY public ./public
+COPY styles ./styles
+
+COPY store.ts ./store.ts
+COPY tsconfig.json ./tsconfig.json
+COPY typings.d.ts ./typings.d.ts
+
+
+RUN yarn build
+
+# Production image, copy all the files and run next
+FROM node:16-alpine AS runnner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# incase you want to disable telemetry during runtime , uncomment below
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# RUN addgroup --system -gid 1001 nodejs
+# RUN adduser -system --uid 1001 nextjs
+
+# you only need to copy next.config.js if you are NOT using the default configuration
+#COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/public ./public
+
+# switch to new user for security purposes
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+CMD ["node", "server.js"]

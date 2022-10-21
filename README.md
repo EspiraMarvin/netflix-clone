@@ -1,3 +1,13 @@
+
+# run project
+
+> yarn dev
+
+# run with docker
+
+> docker-compose up --build --force-recreate
+
+
 # Next.js + Tailwind CSS Example
 
 # Next.js + Tailwind CSS Typescript Setup
