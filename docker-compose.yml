@@ -9,6 +9,6 @@ services:
     volumes:
       - .:/app
       - .:/fakeflix_netflix
-      - ./node_modules
+      - .:/node_modules
     stdin_open: true
     tty: true    
