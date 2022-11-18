@@ -20,26 +20,21 @@ const Plans = ({ products }: Props) => {
     const isMounted = useRef(false)
 
     useEffect(() => {
-         if (isMounted.current)  return 
-         isMounted.current = true
-            
-               async function fetchPlans() {
-                  await getProducts(payments, {
-                      includePrices: true,
-                      activeOnly: true
-                    }).then((res) => {
-                    //   console.log('res',res)
-                      return res
-                      // console.log('res res res res stringfy', JSON.parse(JSON.stringify(res)))
-        
-                      // return JSON.parse(JSON.stringify(res))
-                      return res
-                    })
-                    .catch(error => console.log('error', error))
-                }
-        
-                // fetchPlans()
-            }, [])
+      if (isMounted.current) return
+      isMounted.current = true
+
+      async function fetchPlans() {
+        await getProducts(payments, {
+          includePrices: true,
+          activeOnly: true,
+        })
+          .then((res) => {
+            return res
+          })
+          .catch((error) => console.log('error', error))
+      }
+      fetchPlans()
+    }, [])
         
 
     const PlansDescList = (): React.ReactNode => 
