@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
 export default function Feedback() {
   const [text, setText] = useState('')
 
+  const textRef = useRef<HTMLTextAreaElement | null>(null)
   const handleSubmit = (e: any) => {
     e.preventDefault()
     setText('')
@@ -27,6 +28,7 @@ export default function Feedback() {
           placeholder="Feedback?"
           rows={3}
           value={text}
+          ref={textRef}
           onChange={onChangeText}
           className="w-64 h-12 p-2 text-sm transition-all duration-100 bg-transparent border-0 resize-y peer placeholder-shown:h-9 placeholder-shown:w-24 focus:h-12 focus:w-64 focus:outline-none dark:text-white"
         />
