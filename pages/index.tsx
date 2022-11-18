@@ -13,6 +13,7 @@ import { getProducts, Product } from '@stripe/firestore-stripe-payments'
 import payments from '../lib/stripe'
 import useSubscription from '../hooks/useSubscription'
 import useList from '../hooks/useList'
+import Feedback from '../components/Feedback'
 
 interface Props {
   netflixOriginals: Movie[]
@@ -22,71 +23,69 @@ interface Props {
   comedyMovies: Movie[]
   horrorMovies: Movie[]
   romanceMovies: Movie[]
-  documentaries: Movie[],
-  products: Product[] 
+  documentaries: Movie[]
+  products: Product[]
 }
 
-const Home = ({ 
-  netflixOriginals, 
+const Home = ({
+  netflixOriginals,
   trendingNow,
   topRated,
   actionMovies,
-  comedyMovies, 
-  horrorMovies, 
+  comedyMovies,
+  horrorMovies,
   romanceMovies,
   documentaries,
-  products
+  products,
 }: Props) => {
-    const { loading, user } = useAuth()
-    const showModal = useRecoilValue(modalState)
-    const subscription = useSubscription(user)
-    const movie = useRecoilValue(movieState)
-    const list = useList(user?.uid)
+  const { loading, user } = useAuth()
+  const showModal = useRecoilValue(modalState)
+  const subscription = useSubscription(user)
+  const movie = useRecoilValue(movieState)
+  const list = useList(user?.uid)
 
-  
-  
   if (loading || subscription === null) return null
-  
-  if (!subscription) return <Plans products={products} />
-    
 
+  if (!subscription) return <Plans products={products} />
 
   return (
     <div className="relative h-screen lg:h-[140vh]">
       <Head>
-        <title>Home - Netflix</title>   
+        <title>Home - Netflix</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Header />
-      
+
       <main className="relative pb-24 pl-4 lg:space-y-24 lg:pl-16">
-         <Banner netflixOriginals={netflixOriginals} />
+        <Banner netflixOriginals={netflixOriginals} />
         <section className="md:space-y-24">
           <Row title="Trending Now" movies={trendingNow} />
           <Row title="Top Rated" movies={topRated} />
           <Row title="Action Thrillers" movies={actionMovies} />
 
           {/* my list component */}
-          {
-            list.length > 0 &&
-           <Row title="My List" movies={list} />
-          }
-           {/* my list component */}
-           {/* {list.length > 0 && <Row title="My List" movies={list} />} */}
+          {list.length > 0 && <Row title="My List" movies={list} />}
+          {/* my list component */}
+          {/* {list.length > 0 && <Row title="My List" movies={list} />} */}
 
           <Row title="Comedies" movies={comedyMovies} />
           <Row title="Scary Movies" movies={horrorMovies} />
           <Row title="Romance Movies" movies={romanceMovies} />
           <Row title="Documentaries" movies={documentaries} />
-          
         </section>
-         { showModal && <Modal /> }
+        {showModal && <Modal />}
       </main>
-      <footer className='relative'>
-         <div className='absolute bottom-2 right-4 hover:bg-[#e50914] hover:p-4 md:p-3 md:bg-[#e50914] cursor-pointer'>
-            <a href="https://www.linkedin.com/in/marvin-espira/" target="_blank"> By Marvin Espira</a>
-          </div>
+      <footer className="relative">
+        <div className="fixed z-0 cursor-pointer bottom-4 right-4">
+          <Feedback />
+        </div>
+        <div className="absolute md:fixed bottom-1 md:bottom-2 z-0 right-2 md:right-4 rounded-xs hover:bg-[#e50914] hover:p-2 md:p-1 bg-[#e50914] cursor-pointer">
+          <a href="https://www.linkedin.com/in/marvin-espira/" target="_blank">
+            {' '}
+            By Marvin Espira
+          </a>
+        </div>
       </footer>
     </div>
   )
@@ -95,13 +94,13 @@ const Home = ({
 export default Home
 
 export const getServerSideProps = async () => {
-
   // produts pricing plans
   const products = await getProducts(payments, {
     includePrices: true,
-    activeOnly: true
-  }).then((res) => res)
-    .catch(error => console.log(error.message))
+    activeOnly: true,
+  })
+    .then((res) => res)
+    .catch((error) => console.log(error.message))
 
   const [
     netflixOriginals,
@@ -111,7 +110,7 @@ export const getServerSideProps = async () => {
     comedyMovies,
     horrorMovies,
     romanceMovies,
-    documentaries
+    documentaries,
   ] = await Promise.all([
     fetch(requests.fetchNetflixOriginals).then((res) => res.json()),
     fetch(requests.fetchTrending).then((res) => res.json()),
@@ -132,8 +131,8 @@ export const getServerSideProps = async () => {
       comedyMovies: comedyMovies.results,
       horrorMovies: horrorMovies.results,
       romanceMovies: romanceMovies.results,
-      documentaries: documentaries.results, 
-      products
-    }
+      documentaries: documentaries.results,
+      products,
+    },
   }
 }
