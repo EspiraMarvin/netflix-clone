@@ -119,7 +119,7 @@ function Player({ trailer }: Props) {
         }}
         onEnded={() => {
           setPlay(false)
-          setPause(false)
+          setPause(true)
         }}
       />
 
