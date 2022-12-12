@@ -10,44 +10,42 @@ import useAuth from '../hooks/useAuth';
 import { db } from '../lib/firebase';
 import toast, { Toaster } from 'react-hot-toast'
 import { Movie } from '../typings';
-import Tudum from './Tadum'
+import Tadum from './Tadum'
+import useVideoEvents from '../hooks/useVideoEvents'
 
 interface Props {
-    trailer: string
-  }
+  trailer: string
+}
 
-  const toastStyle = {
-    backgroundColor: 'white',
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: '16px',
-    padding: '15px',
-    borderRadius: '9999px',
-    maxWidth: '1000px',
-  }
+const toastStyle = {
+  backgroundColor: 'white',
+  color: 'black',
+  fontWeight: 'bold',
+  fontSize: '16px',
+  padding: '15px',
+  borderRadius: '9999px',
+  maxWidth: '1000px',
+}
 
 function Player({ trailer }: Props) {
   const [movie, setMovie] = useRecoilState(movieState)
-  const [play, setPlay] = useState(false)
-  const [playTadum, setPlayTadum] = useState(false)
-
-  const [pause, setPause] = useState(true)
-  const [loading, setLoading] = useState(true)
-  const [muted, setMuted] = useState(false)
-  const [addedToList, setAddedToList] = useState(false)
   const [movies, setMovies] = useState<DocumentData[] | Movie[]>([])
 
   const { user } = useAuth()
-  const isMounted = useRef(false)
+  const {
+    loading,
+    muted,
+    pause,
+    play,
+    playTadum,
+    setPlayTadum,
+    setLoading,
+    setMuted,
+    setPause,
+    setPlay,
+  } = useVideoEvents()
 
-  // play tadum sound
-  useEffect(() => {
-    if (play === false) return
-    if (play === true) setPlayTadum(true)
-    return () => {
-      setPlayTadum(true)
-    }
-  }, [play])
+  const [addedToList, setAddedToList] = useState(false)
 
   // Find all the movies in the user's list
   useEffect(() => {
@@ -97,6 +95,8 @@ function Player({ trailer }: Props) {
     }
   }
 
+  // preventing double useEffect calls in development mode (not an issue though)
+  const isMounted = useRef(false)
   useEffect(() => {
     if (isMounted.current) return
     isMounted.current = true
@@ -148,7 +148,7 @@ function Player({ trailer }: Props) {
               </>
             )}
 
-            {playTadum && <Tudum />}
+            {playTadum && <Tadum playTadum={playTadum} />}
 
             {/* display loading  */}
             {loading && (
